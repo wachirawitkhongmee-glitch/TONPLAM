@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FFB7B2">
+    <title>ห้องเรียนภาษา</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .split-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        @media (min-width: 800px) {
+            .split-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .reference-sheet {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border: 3px solid #eee;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            color: #FF6F61;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .char-box {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 5px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .char-box:hover {
+            transform: scale(1.05);
+            border-color: #FFB7B2;
+        }
+
+        .char-big {
+            font-size: 1.4rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .char-sub {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .char-meaning {
+            font-size: 0.8rem;
+            color: #FF6F61;
+            margin-top: 2px;
+        }
+
+        .vocab-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #fff0f5;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        .vocab-word {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .vocab-mean {
+            color: #555;
+        }
+
+        .tab-btn {
+            padding: 10px 15px;
+            background: #eee;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-right: 5px;
+            font-family: inherit;
+            color: #666;
+        }
+
+        .tab-btn.active {
+            background: #FF9AA2;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page" style="max-width: 1000px;">
+
+        <div class="top-bar">
+            <button class="icon-btn" onclick="location.href='foreign_languages.html'">🔙 กลับ</button>
+            <div class="app-title" style="font-size: 1.2rem;">ห้องเรียนภาษา 🌍</div>
+            <div style="width: 50px;"></div>
+        </div>
+
+        <!-- Header Section -->
+        <div class="modern-card bg-gradient-orange" style="color: white; padding: 20px; text-align: center;">
+            <h2 id="lang-title" style="margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); color: white;"></h2>
+            <p id="lang-desc" style="margin-top: 5px; opacity: 0.9; color: white;"></p>
+        </div>
+
+        <div class="split-container">
+
+            <!-- Left Column: Video Lesson -->
+            <div>
+                <div class="modern-card" style="padding: 0; overflow: hidden; border: none; margin-bottom: 20px;">
+                    <div style="padding: 15px; border-bottom: 2px solid #eee;">
+                        <h3 style="margin: 0; color: #555;">📺 วิดีโอสอน (Video Lesson)</h3>
+                    </div>
+                    <div id="video-container" style="position: relative; padding-bottom: 56.25%; height: 0;">
+                        <!-- Iframe will be injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Tabs & Content -->
+            <div>
+                <div style="margin-bottom: 10px; white-space: nowrap; overflow-x: auto; padding-bottom: 5px;">
+                    <button class="tab-btn active" onclick="showTab('alphabet')">🔤 ตัวอักษร</button>
+                    <button class="tab-btn" onclick="showTab('vocab')">📖 คำศัพท์</button>
+                    <button class="tab-btn" onclick="showTab('sentence')">💬 ประโยค</button>
+                </div>
+
+                <div class="reference-sheet">
+                    <div id="content-area"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const selectedLang = localStorage.getItem("selectedForeignLang");
+        const titleEl = document.getElementById("lang-title");
+        const descEl = document.getElementById("lang-desc");
+        const videoContainer = document.getElementById("video-container");
+        const contentArea = document.getElementById("content-area");
+
+        // --- DATA ---
+        const dataLibrary = {
+            "english": {
+                title: "English (ภาษาอังกฤษ) 🇬🇧",
+                desc: "ปูพื้นฐาน A-Z และคำศัพท์ในชีวิตประจำวัน",
+                videoId: "iErHjTef2tk",
+                alphabet: `
+            <h3 class="section-title">พยัญชนะ (Consonants) & สระ (Vowels)</h3>
+            <div class="char-grid">
+                ${generateCharGrid([
+                    ['A a', 'แอะ/เอ', 'Ant มด'], ['B b', 'เบอะ', 'Bird นก'], ['C c', 'เคอะ', 'Cat แมว'],
+                    ['D d', 'เดอะ', 'Dog หมา'], ['E e', 'เอะ/อี', 'Egg ไข่'], ['F f', 'เฟอะ', 'Fish ปลา'],
+                    ['G g', 'เกอะ', 'Gun ปืน'], ['H h', 'เฮอะ', 'Hen แม่ไก่'], ['I i', 'อิ/ไอ', 'Ice น้ำแข็ง'],
+                    ['J j', 'เจอะ', 'Jar โอ่ง'], ['K k', 'เคอะ', 'Kite ว่าว'], ['L l', 'เลอะ', 'Lion สิงโต'],
+                    ['M m', 'เมอะ', 'Man ผู้ชาย'], ['N n', 'เนอะ', 'Net ตาข่าย'], ['O o', 'เอาะ/โอ', 'Ox วัว'],
+                    ['P p', 'เพอะ', 'Pig หมู'], ['Q q', 'คว', 'Queen ราชินี'], ['R r', 'เรอะ', 'Rat หนู'],
+                    ['S s', 'เซอะ', 'Sun พระอาทิตย์'], ['T t', 'เทอะ', 'Top ลูกข่าง'], ['U u', 'อะ/ยู', 'UFO ยูเอฟโอ'],
+                    ['V v', 'เวอะ', 'Van รถตู้'], ['W w', 'เวอะ', 'Wig วิกผม'], ['X x', 'กซ์', 'X-ray'],
+                    ['Y y', 'เยอะ', 'Yo-yo โยโย่'], ['Z z', 'เซอะ(สั่น)', 'Zoo สวนสัตว์']
+                ])}
+            </div>
+            <div style="background:#e3f2fd; padding:10px; border-radius:10px;">
+                <strong>💡 สระหลัก 5 ตัว:</strong> A, E, I, O, U<br>
+                สระเสียงสั้น: Cat (แอะ), Bed (เอะ), Pig (อิ), Dog (เอาะ), Bus (อะ)
+            </div>
+        `,
+                vocab: `
+            <h3 class="section-title">คำศัพท์พื้นฐาน (Vocabulary)</h3>
+            ${generateVocabList([
+                    ['Hello', 'เฮล-โล', 'สวัสดี'],
+                    ['Thank you', 'แต๊ง-คิว', 'ขอบคุณ'],
+                    ['Sorry', 'ซอ-รี่', 'ขอโทษ'],
+                    ['Yes', 'เยส', 'ใช่'],
+                    ['No', 'โน', 'ไม่'],
+                    ['Friend', 'เฟรนด์', 'เพื่อน'],
+                    ['Family', 'แฟ-มิ-ลี่', 'ครอบครัว'],
+                    ['Food', 'ฟู้ด', 'อาหาร'],
+                    ['Water', 'วอ-เทอร์', 'น้ำ'],
+                    ['Happy', 'แฮป-ปี้', 'มีความสุข']
+                ])}
+        `,
+                sentence: `
+             <h3 class="section-title">ประโยคใช้บ่อย (Sentences)</h3>
+             ${generateVocabList([
+                    ['How are you?', 'ฮาว-อา-ยู', 'คุณสบายดีไหม?'],
+                    ['I am fine.', 'ไอ-แอม-ไฟน์', 'ฉันสบายดี'],
+                    ['My name is...', 'มาย-เนม-อิส...', 'ฉันชื่อ...'],
+                    ['Nice to meet you.', 'ไนซ์-ทู-มีท-ยู', 'ยินดีที่ได้รู้จัก'],
+                    ['Where is the toilet?', 'แวร์-อิส-เดอะ-ทอย-เล็ต', 'ห้องน้ำอยู่ที่ไหน?']
+                ])}
+        `
+            },
+            "japanese": {
+                title: "Japanese (ภาษาญี่ปุ่น) 🇯🇵",
+                desc: "อักษรฮิรางานะและคำทักทายที่ใช้บ่อย",
+                videoId: "s6DKRgtVLGA",
+                alphabet: `
+            <h3 class="section-title">ฮิรางานะ (Hiragana)</h3>
+            <p>วรรค อะ (a) - กะ (ka) - สะ (sa) - ทะ (ta) - นะ (na)</p>
+            <div class="char-grid">
+                 ${generateCharGrid([
+                    ['あ', 'a', 'อะ'], ['い', 'i', 'อิ'], ['う', 'u', 'อุ'], ['え', 'e', 'เอะ'], ['お', 'o', 'โอะ'],
+                    ['か', 'ka', 'กะ'], ['き', 'ki', 'กิ'], ['く', 'ku', 'กุ'], ['け', 'ke', 'เกะ'], ['こ', 'ko', 'โกะ'],
+                    ['さ', 'sa', 'ซะ'], ['し', 'shi', 'ชิ'], ['す', 'su', 'สุ'], ['せ', 'se', 'เซะ'], ['そ', 'so', 'โซะ'],
+                    ['た', 'ta', 'ทะ'], ['ち', 'chi', 'จิ'], ['つ', 'tsu', 'สึ'], ['て', 'te', 'เทะ'], ['と', 'to', 'โทะ'],
+                    ['な', 'na', 'นะ'], ['に', 'ni', 'นิ'], ['ぬ', 'nu', 'นุ'], ['ね', 'ne', 'เนะ'], ['の', 'no', 'โนะ']
+                ])}
+            </div>
+            <p>วรรค ฮะ (ha) - มะ (ma) - ยะ (ya) - ระ (ra) - วะ (wa)</p>
+            <div class="char-grid">
+                 ${generateCharGrid([
+                    ['は', 'ha', 'ฮะ'], ['ひ', 'hi', 'ฮิ'], ['ふ', 'fu', 'ฟุ'], ['へ', 'he', 'เฮะ'], ['ほ', 'ho', 'โฮะ'],
+                    ['ま', 'ma', 'มะ'], ['み', 'mi', 'มิ'], ['む', 'mu', 'มุ'], ['め', 'me', 'เมะ'], ['も', 'mo', 'โมะ'],
+                    ['や', 'ya', 'ยะ'], ['ゆ', 'yu', 'ยุ'], ['よ', 'yo', 'โยะ'],
+                    ['ら', 'ra', 'ระ'], ['り', 'ri', 'ริ'], ['る', 'ru', 'รุ'], ['れ', 're', 'เระ'], ['ろ', 'ro', 'โระ'],
+                    ['わ', 'wa', 'วะ'], ['を', 'wo', 'โวะ'], ['ん', 'n', 'อึน']
+                ])}
+            </div>
+            <div style="background:#fff3e0; padding:10px; border-radius:10px;">
+                <strong>💡 เสียงขุ่น (Dakuon):</strong> เติม ゛ (Ten Ten)<br>
+                เช่น か(ka) → が(ga),  さ(sa) → ざ(za)
+            </div>
+        `,
+                vocab: `
+            <h3 class="section-title">คำศัพท์น่ารู้ (Vocabulary)</h3>
+            ${generateVocabList([
+                    ['Konnichiwa', 'คน-นิ-จิ-วะ', 'สวัสดี (ตอนบ่าย)'],
+                    ['Arigatou', 'อะ-ริ-กา-โตะ', 'ขอบคุณ'],
+                    ['Sumimasen', 'ซุ-มิ-มา-เซง', 'ขอโทษ/รบกวนหน่อย'],
+                    ['Oishii', 'โอ-อิ-ชี่', 'อร่อย'],
+                    ['Kawaii', 'คะ-ไว-อิ', 'น่ารัก'],
+                    ['Hai', 'ไฮ่', 'ใช่/ครับ/ค่ะ'],
+                    ['Iie', 'อี-เยะ', 'ไม่'],
+                    ['Neko', 'เนะ-โกะ', 'แมว'],
+                    ['Inu', 'อิ-นุ', 'หมา']
+                ])}
+        `,
+                sentence: `
+             <h3 class="section-title">ประโยคพื้นฐาน (Sentences)</h3>
+             ${generateVocabList([
+                    ['Ohayou gozaimasu', 'โอ-ฮา-โย โก-ไซ-มัส', 'สวัสดีตอนเช้า'],
+                    ['Hajimemashite', 'ฮา-จิ-เมะ-มา-ชิ-เตะ', 'ยินดีที่ได้รู้จัก (ครั้งแรก)'],
+                    ['Watashi wa ... desu', 'วา-ตา-ชิ วะ ... เดส', 'ฉันชื่อ...'],
+                    ['Kore wa nan desu ka?', 'โคะ-เระ วะ นัน เดส ก๊ะ', 'อันนี้คืออะไร?'],
+                    ['Genki desu ka?', 'เกง-กิ เดส ก๊ะ', 'สบายดีไหม?']
+                ])}
+        `
+            },
+            "chinese": {
+                title: "Chinese (ภาษาจีน) 🇨🇳",
+                desc: "พินอิน (Pinyin) และประโยคพื้นฐาน",
+                videoId: "b9AyvjQg4Ac",
+                alphabet: `
+            <h3 class="section-title">พยัญชนะ (Initials)</h3>
+             <div class="char-grid">
+                 ${generateCharGrid([
+                    ['b', 'bo', 'ป'], ['p', 'po', 'พ'], ['m', 'mo', 'ม'], ['f', 'fo', 'ฟ'],
+                    ['d', 'de', 'ต'], ['t', 'te', 'ท'], ['n', 'ne', 'น'], ['l', 'le', 'ล'],
+                    ['g', 'ge', 'ก'], ['k', 'ke', 'ค'], ['h', 'he', 'ฮ'],
+                    ['j', 'ji', 'จ(บี้ปาก)'], ['q', 'qi', 'ช(บี้ปาก)'], ['x', 'xi', 'ซ(บี้ปาก)'],
+                    ['z', 'zi', 'จ'], ['c', 'ci', 'ช'], ['s', 'si', 'ซ'],
+                    ['zh', 'zhi', 'จ(ม้วนลิ้น)'], ['ch', 'chi', 'ช(ม้วนลิ้น)'], ['sh', 'shi', 'ซ(ม้วนลิ้น)'], ['r', 'ri', 'ร(ม้วนลิ้น)']
+                ])}
+            </div>
+            <div style="background:#e0f2f1; padding:10px; border-radius:10px; margin-bottom:10px;">
+                <strong>💡 วรรณยุกต์ 4 เสียง:</strong><br>
+                1. ā (อา) - สูงราบ<br>
+                2. á (อ๋า) - ขึ้นสูง<br>
+                3. ǎ (อ่า) - ลงแล้วขึ้น<br>
+                4. à (อ้า) - ตกเร็ว
+            </div>
+        `,
+                vocab: `
+            <h3 class="section-title">คำศัพท์ (Vocabulary)</h3>
+            ${generateVocabList([
+                    ['Nǐ hǎo', 'หนี-ห่าว', 'สวัสดี'],
+                    ['Xièxiè', 'เซี่ย-เซี่ย', 'ขอบคุณ'],
+                    ['Duìbuqǐ', 'ตุ้ย-ปู้-ฉี', 'ขอโทษ'],
+                    ['Zàijiàn', 'จ้าย-เจี้ยน', 'ลาก่อน'],
+                    ['Māma', 'มา-มะ', 'แม่'],
+                    ['Bàba', 'ป้า-ปะ', 'พ่อ'],
+                    ['Wǒ', 'หว่อ', 'ฉัน'],
+                    ['Nǐ', 'หนี่', 'คุณ'],
+                    ['Tā', 'ทา', 'เขา'],
+                    ['Chī fàn', 'ชือ-ฟ่าน', 'กินข้าว']
+                ])}
+        `,
+                sentence: `
+             <h3 class="section-title">ประโยคสั้นๆ (Sentences)</h3>
+             ${generateVocabList([
+                    ['Nǐ hǎo ma?', 'หนี-ห่าว-มะ', 'คุณสบายดีไหม?'],
+                    ['Wǒ hěn hǎo', 'หว่อ-เหิน-ห่าว', 'ฉันสบายดีมาก'],
+                    ['Nǐ jiào shénme?', 'หนี่-เจี้ยว-เสิน-เมอะ', 'คุณชื่ออะไร?'],
+                    ['Wǒ ài nǐ', 'หว่อ-อ้าย-หนี่', 'ฉันรักเธอ'],
+                    ['Duōshǎo qián?', 'ตัว-เส่า-เฉียน', 'ราคาเท่าไหร่?']
+                ])}
+        `
+            }
+        };
+
+        // --- HELPER FUNCTIONS ---
+        function generateCharGrid(items) {
+            return items.map(item => `
+            <div class="char-box">
+                <div class="char-big">${item[0]}</div>
+                <div class="char-sub">${item[1]}</div>
+                <div class="char-meaning">${item[2]}</div>
+            </div>
+        `).join('');
+        }
+
+        function generateVocabList(items) {
+            return items.map(item => `
+            <div class="vocab-item">
+                <div>
+                   <div class="vocab-word">${item[0]}</div>
+                   <div style="font-size:0.9rem; color:#888;">${item[1]}</div>
+                </div>
+                <div class="vocab-mean">${item[2]}</div>
+            </div>
+        `).join('');
+        }
+
+        // --- INITIALIZATION ---
+        if (dataLibrary[selectedLang]) {
+            const data = dataLibrary[selectedLang];
+            titleEl.innerHTML = data.title;
+            descEl.innerHTML = data.desc;
+
+            // Inject Link Button instead of Iframe
+            videoContainer.innerHTML = `
+                <div style="background: #f0f0f0; padding: 40px; text-align: center; border-radius: 0 0 15px 15px; min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                    <a href="https://www.youtube.com/watch?v=${data.videoId}" target="_blank" style="text-decoration: none;">
+                        <button class="cartoon-btn" style="background: #ff0000; color: white; border: none; padding: 15px 30px; font-size: 1.2rem; cursor: pointer;">
+                            ▶️ กดเพื่อดูวิดีโอบน YouTube
+                        </button>
+                    </a>
+                </div>
+            `;
+
+            // Set default tab content
+            renderContent("alphabet");
+        } else {
+            titleEl.innerText = "ไม่พบภาษาที่เลือก";
+        }
+
+        function renderContent(type) {
+            const data = dataLibrary[selectedLang];
+            if (!data) return;
+
+            let html = "";
+            if (type === 'alphabet') html = data.alphabet;
+            if (type === 'vocab') html = data.vocab;
+            if (type === 'sentence') html = data.sentence;
+
+            const contentArea = document.getElementById("content-area");
+            contentArea.innerHTML = html;
+
+            // Disable Animation reset for cleaner tab switch
+            contentArea.style.opacity = 0;
+            setTimeout(() => contentArea.style.opacity = 1, 50);
+        }
+
+        // Tab switching logic
+        function showTab(type) {
+            // Update Buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update Content
+            renderContent(type);
+        }
+
+        // Add transition style dynamically
+        document.getElementById("content-area").style.transition = "opacity 0.2s";
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

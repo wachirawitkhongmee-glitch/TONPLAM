@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บันทึกรายรับ-รายจ่าย</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="bg-cartoon">
+
+    <div class="page">
+
+        <!-- Header -->
+        <div class="top-bar">
+            <h2 style="font-size: 1.5rem; margin: 0;">💰 บัญชีของฉัน</h2>
+            <button class="icon-btn" onclick="location.href='finance.html'">🔙 กลับ</button>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="cartoon-card" style="margin-bottom: 20px; background: #fff;">
+            <h3>ยอดเงินคงเหลือ</h3>
+            <h1 id="totalBalance" style="color: #4CAF50; font-size: 3rem; margin: 10px 0;">0 ฿</h1>
+
+            <div class="grid-container" style="margin-top: 10px; gap: 10px;">
+                <div style="background: #E8F5E9; padding: 10px; border-radius: 15px; border: 2px solid #C8E6C9;">
+                    <small>รายรับรวม</small>
+                    <div id="totalIncome" style="color: #2E7D32; font-weight: bold; font-size: 1.2rem;">0 ฿</div>
+                </div>
+                <div style="background: #FFEBEE; padding: 10px; border-radius: 15px; border: 2px solid #FFCDD2;">
+                    <small>รายจ่ายรวม</small>
+                    <div id="totalExpense" style="color: #C62828; font-weight: bold; font-size: 1.2rem;">0 ฿</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Transaction Form -->
+        <div class="cartoon-card" style="margin-bottom: 20px; text-align: left;">
+            <h3 style="color: #FF9AA2; border-bottom: 2px dashed #FF9AA2; padding-bottom: 10px; margin-bottom: 15px;">📝
+                จดบันทึก</h3>
+
+            <label>ประเภท:</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <button type="button" class="cartoon-btn" id="btnIncome" onclick="setType('income')"
+                    style="margin-top: 0; background: #ddd; color: #555;">รายรับ (+)</button>
+                <button type="button" class="cartoon-btn" id="btnExpense" onclick="setType('expense')"
+                    style="margin-top: 0; background: #FFCDD2; color: #C62828; border: 2px solid #E57373;">รายจ่าย
+                    (-)</button>
+            </div>
+
+            <label>ชื่อรายการ:</label>
+            <input type="text" id="desc" class="cartoon-input" placeholder="เช่น ค่าขนม, ซื้อของเล่น">
+
+            <label>จำนวนเงิน (บาท):</label>
+            <input type="number" id="amount" class="cartoon-input" placeholder="0">
+
+            <button class="cartoon-btn" onclick="addTransaction()">บันทึกรายการ ✅</button>
+        </div>
+
+        <!-- List -->
+        <h3 style="margin-left: 10px; color: #555;">📜 ประวัติรายการ</h3>
+        <div id="historyList" style="padding-bottom: 50px;">
+            <!-- Items will be here -->
+        </div>
+
+    </div>
+
+    <script>
+        // State
+        let currentType = 'expense';
+        // Multi-user support
+        const currentUser = localStorage.getItem("currentUser") || "guest";
+        const STORAGE_KEY = 'lifefix_finance_data_' + currentUser;
+
+        // Show user name
+        document.querySelector('h2').innerText += ` (${currentUser})`;
+
+        // Initialize
+        loadData();
+        setType('expense');
+
+        function setType(type) {
+            currentType = type;
+            const btnIncome = document.getElementById('btnIncome');
+            const btnExpense = document.getElementById('btnExpense');
+
+            if (type === 'income') {
+                btnIncome.style.background = '#C8E6C9';
+                btnIncome.style.color = '#2E7D32';
+                btnIncome.style.border = '2px solid #81C784';
+
+                btnExpense.style.background = '#ddd';
+                btnExpense.style.color = '#555';
+                btnExpense.style.border = 'none';
+            } else {
+                btnExpense.style.background = '#FFCDD2';
+                btnExpense.style.color = '#C62828';
+                btnExpense.style.border = '2px solid #E57373';
+
+                btnIncome.style.background = '#ddd';
+                btnIncome.style.color = '#555';
+                btnIncome.style.border = 'none';
+            }
+        }
+
+        function getData() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        }
+
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function addTransaction() {
+            const desc = document.getElementById('desc').value.trim();
+            const amount = parseFloat(document.getElementById('amount').value);
+
+            if (!desc) {
+                alert("อย่าลืมใส่ชื่อรายการนะจ๊ะ");
+                return;
+            }
+            if (isNaN(amount) || amount <= 0) {
+                alert("ใส่จำนวนเงินให้ถูกต้องด้วยนะ");
+                return;
+            }
+
+            const newItem = {
+                id: Date.now(),
+                type: currentType,
+                desc: desc,
+                amount: amount,
+                date: new Date().toLocaleString('th-TH')
+            };
+
+            const data = getData();
+            data.unshift(newItem); // Add to top
+            saveData(data);
+
+            // Reset form
+            document.getElementById('desc').value = '';
+            document.getElementById('amount').value = '';
+            loadData();
+        }
+
+        function deleteItem(id) {
+            if (confirm("ลบรายการนี้ไหม?")) {
+                let data = getData();
+                data = data.filter(item => item.id !== id);
+                saveData(data);
+                loadData();
+            }
+        }
+
+        function loadData() {
+            const data = getData();
+            const list = document.getElementById('historyList');
+            const totalBalEl = document.getElementById('totalBalance');
+            const totalIncEl = document.getElementById('totalIncome');
+            const totalExpEl = document.getElementById('totalExpense');
+
+            list.innerHTML = "";
+
+            let income = 0;
+            let expense = 0;
+
+            if (data.length === 0) {
+                list.innerHTML = `<div style="text-align:center; color:#999; margin-top:20px;">
+                    <i class="fas fa-receipt" style="font-size:3rem; margin-bottom:10px;"></i><br>
+                    ยังไม่มีรายการจ้า
+                </div>`;
+            }
+
+            data.forEach(item => {
+                const isIncome = item.type === 'income';
+                if (isIncome) income += item.amount;
+                else expense += item.amount;
+
+                const color = isIncome ? '#2E7D32' : '#C62828';
+                const sign = isIncome ? '+' : '-';
+                const icon = isIncome ? '💰' : '💸';
+                const borderLeft = isIncome ? '5px solid #4CAF50' : '5px solid #F44336';
+
+                const html = `
+                <div class="cartoon-card" style="padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-left: ${borderLeft}; border-right: none; border-top: none; border-bottom: 2px solid #eee; text-align: left;">
+                    <div>
+                        <div style="font-weight: bold; font-size: 1.1rem;">${icon} ${item.desc}</div>
+                        <div style="font-size: 0.8rem; color: #888;">${item.date}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="color: ${color}; font-weight: bold; font-size: 1.2rem;">${sign}${item.amount.toLocaleString()}</div>
+                        <button onclick="deleteItem(${item.id})" style="background: none; border: none; color: #ddd; cursor: pointer; font-size: 0.9rem;">❌</button>
+                    </div>
+                </div>
+                `;
+                list.innerHTML += html;
+            });
+
+            const balance = income - expense;
+            totalIncEl.innerText = income.toLocaleString() + " ฿";
+            totalExpEl.innerText = expense.toLocaleString() + " ฿";
+            totalBalance.innerText = balance.toLocaleString() + " ฿";
+
+            if (balance < 0) totalBalance.style.color = '#C62828';
+            else totalBalance.style.color = '#4CAF50';
+        }
+    </script>
+
+</body>
+
+</html>

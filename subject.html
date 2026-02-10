@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เนื้อหาการเรียน</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-cartoon">
+
+    <div class="page" style="max-width: 600px;">
+
+        <div class="top-bar">
+            <div class="app-title">ห้องสมุดความรู้ 📚</div>
+            <button class="icon-btn" onclick="location.href='study.html'">🔙 กลับ</button>
+        </div>
+
+        <h2 style="text-align: center; color: #555;">เลือกวิชาที่สนใจ 🧐</h2>
+
+        <div class="grid-container">
+            <div class="category-item color-blue" onclick="goLesson('คณิตศาสตร์')">
+                <div style="font-size: 2.5rem;">🔢</div>
+                <div>คณิตศาสตร์</div>
+            </div>
+            <div class="category-item color-green" onclick="goLesson('วิทยาศาสตร์')">
+                <div style="font-size: 2.5rem;">🔬</div>
+                <div>วิทยาศาสตร์</div>
+            </div>
+            <div class="category-item color-yellow" onclick="goLesson('ภาษาไทย')">
+                <div style="font-size: 2.5rem;">🇹🇭</div>
+                <div>ภาษาไทย</div>
+            </div>
+            <div class="category-item color-pink" onclick="goLesson('ภาษาอังกฤษ')">
+                <div style="font-size: 2.5rem;">🅰️</div>
+                <div>ภาษาอังกฤษ</div>
+            </div>
+            <div class="category-item" style="border-color: #BCAAA4; background: #EFEBE9;"
+                onclick="goLesson('สังคมศึกษา')">
+                <div style="font-size: 2.5rem;">🌏</div>
+                <div>สังคมศึกษา</div>
+            </div>
+            <div class="category-item" style="border-color: #FFCC80; background: #FFF3E0;"
+                onclick="location.href='sport.html'">
+                <div style="font-size: 2.5rem;">⚽</div>
+                <div>กีฬา</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function goLesson(subject) {
+            localStorage.setItem("subject", subject);
+            location.href = "lesson.html";
+        }
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กำลังออกจากระบบ...</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-cartoon">
+
+    <div class="page">
+        <div class="cartoon-card">
+            <h2>บ๊ายบาย! 👋</h2>
+            <p>กำลังออกจากระบบ...</p>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            // Only remove session data, keep users database!
+            localStorage.removeItem("currentUser");
+            localStorage.removeItem("cat");
+            localStorage.removeItem("problem");
+            // Optional: keep 'user' and 'pass' if "Remember Me" was checked? 
+            // original code cleared EVERYTHING. 
+            // Let's just remove currentUser which acts as the session token usually.
+
+            location.href = "login.html";
+        }, 1000);
+    </script>
+
+</body>
+
+</html>

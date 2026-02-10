@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeFix Web</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-cartoon">
+
+  <div class="page" style="text-align: center;">
+    <div class="cartoon-card" style="padding: 50px 20px;">
+      <div style="font-size: 80px; margin-bottom: 20px;">🎈</div>
+      <h1>ยินดีต้อนรับสู่ LifeFix Web</h1>
+      <p>เว็ปแก้ปัญหาชีวิตประจำวัน</p>
+
+      <a href="login.html" style="text-decoration: none;">
+        <button class="cartoon-btn" style="width: 200px; font-size: 1.5rem;">เริ่มใช้งาน 🚀</button>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator && window.location.protocol.startsWith('http')) {
+      navigator.serviceWorker.register("service-worker.js").catch(err => {
+        console.warn("ServiceWorker registration skipped (likely local file):", err.message);
+      });
+    }
+  </script>
+
+</body>
+
+</html>

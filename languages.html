@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FFB7B2">
+    <title>เลือกประเภทภาษา</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="page" style="max-width: 600px;">
+
+        <div class="top-bar">
+            <button class="icon-btn" onclick="location.href='category.html'">🔙 กลับ</button>
+            <div class="app-title" style="font-size: 1.2rem;">เลือกประเภทภาษา</div>
+            <div style="width: 50px;"></div>
+        </div>
+
+        <h2 style="text-align: center; margin-top: 20px; color: #555;">สนใจภาษาด้านไหนครับ?</h2>
+
+        <div style="display: grid; gap: 20px; margin-top: 30px;">
+
+            <div class="modern-card bg-gradient-purple" onclick="location.href='computer_languages.html'"
+                style="cursor: pointer;">
+                <div style="display: flex; align-items: center;">
+                    <div
+                        style="font-size: 3.5rem; background: rgba(255,255,255,0.3); padding: 15px; border-radius: 50%; margin-right: 20px;">
+                        💻</div>
+                    <div>
+                        <h3
+                            style="margin: 0; font-size: 1.5rem; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+                            ภาษาคอมพิวเตอร์</h3>
+                        <p style="margin: 5px 0 0 0; color: #fff; opacity: 0.9;">Coding, Programming</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Foreign Languages -->
+            <div class="modern-card bg-gradient-orange" onclick="location.href='foreign_languages.html'"
+                style="cursor: pointer;">
+                <div style="display: flex; align-items: center;">
+                    <div
+                        style="font-size: 3.5rem; background: rgba(255,255,255,0.3); padding: 15px; border-radius: 50%; margin-right: 20px;">
+                        🗣️</div>
+                    <div>
+                        <h3
+                            style="margin: 0; font-size: 1.5rem; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+                            ภาษาต่างประเทศ</h3>
+                        <p style="margin: 5px 0 0 0; color: #fff; opacity: 0.9;">English, Japanese, Chinese</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sign Language -->
+            <div class="modern-card bg-gradient-blue" onclick="location.href='sign_language.html'"
+                style="cursor: pointer; background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);">
+                <div style="display: flex; align-items: center;">
+                    <div
+                        style="font-size: 3.5rem; background: rgba(255,255,255,0.3); padding: 15px; border-radius: 50%; margin-right: 20px;">
+                        🤟</div>
+                    <div>
+                        <h3
+                            style="margin: 0; font-size: 1.5rem; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+                            ภาษามือไทย</h3>
+                        <p style="margin: 5px 0 0 0; color: #fff; opacity: 0.9;">สำหรับผู้เริ่มต้น</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    </div>
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

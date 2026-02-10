@@ -1,0 +1,69 @@
+l<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeFix Web - เข้าสู่ระบบ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-cartoon">
+
+  <div class="page">
+    <div class="cartoon-card">
+      <div class="logo-area" style="font-size: 50px; margin-bottom: 10px;">🌟</div>
+      <h2>LifeFix Web</h2>
+      <p>เว็ปแก้ปัญหาชีวิตประจำวัน</p>
+
+      <input type="text" class="cartoon-input" placeholder="ชื่อผู้ใช้">
+      <input type="password" class="cartoon-input" placeholder="รหัสผ่าน">
+
+      <div style="text-align: left; margin: 10px 5px; font-family: 'Nunito', sans-serif;">
+        <input type="checkbox" id="remember" style="width: auto;"> จำฉันไว้
+      </div>
+
+      <button class="cartoon-btn" onclick="login()">เข้าสู่ระบบ</button>
+
+      <div style="margin-top: 20px;">
+        <p><a href="forgot.html">ลืมรหัสผ่าน?</a></p>
+        <p><a href="register.html">ยังไม่มีบัญชี? สมัครสมาชิก</a></p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      let u = document.querySelectorAll("input")[0].value;
+      let p = document.querySelectorAll("input")[1].value;
+
+      let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (!users[u]) { alert("ไม่มีบัญชีนี้ในระบบจ้า"); return; }
+      if (users[u].pass != p) { alert("รหัสผ่านไม่ถูกต้องลองใหม่นะ"); return; }
+
+      if (document.getElementById("remember").checked) {
+        localStorage.setItem("user", u);
+        localStorage.setItem("pass", p);
+      }
+
+      location.href = "category.html";
+      localStorage.setItem("currentUser", u);
+    }
+
+    window.onload = function () {
+      document.querySelectorAll("input")[0].value = localStorage.getItem("user") || "";
+      document.querySelectorAll("input")[1].value = localStorage.getItem("pass") || "";
+    }
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+
+</body>
+
+</html>

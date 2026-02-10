@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หมวดการเงิน</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="bg-cartoon">
+
+    <div class="page" style="text-align: center;">
+
+        <!-- Header -->
+        <div class="top-bar">
+            <h2 style="font-size: 1.5rem; margin: 0; color: #FF6F61;">💰 หมวดการเงิน</h2>
+            <button class="icon-btn" onclick="location.href='category.html'">🔙 กลับ</button>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="cartoon-card" style="padding: 40px 20px;">
+            <div style="font-size: 5rem; margin-bottom: 20px;">🏦</div>
+            <p style="margin-bottom: 30px;">เรียนรู้ปูพื้นฐานการเงิน & จดบันทึกรายรับรายจ่าย</p>
+
+            <button class="cartoon-btn" onclick="location.href='finance-list.html'">
+                📊 สมุดบัญชีรายรับ-รายจ่าย
+            </button>
+
+            <button class="cartoon-btn secondary" style="margin-top: 15px;"
+                onclick="location.href='problems.html'">
+                🎯 ตั้งเป้าหมายเก็บเงิน
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

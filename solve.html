@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <div class="page">
+    <style>
+      .page {
+        opacity: 0;
+        transition: opacity .5s ease;
+      }
+
+      .page.show {
+        opacity: 1;
+      }
+    </style>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#43A047">
+
+    <meta charset="UTF-8">
+    <title>วิธีแก้ปัญหา</title>
+    <style>
+      body {
+        font-family: tahoma;
+        background: #fffde7;
+      }
+
+      .box {
+        background: white;
+        width: 80%;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 15px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 120px;
+      }
+
+      button {
+        padding: 10px 20px;
+        border-radius: 8px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+      }
+    </style>
+</head>
+
+<body>
+  <div class="box">
+    <h2>ตัวอย่างปัญหา : เงินไม่พอใช้</h2>
+    <ul>
+      <li>จดบันทึกรายรับ–รายจ่าย</li>
+      <li>ลดค่าใช้จ่ายที่ไม่จำเป็น</li>
+      <li>ตั้งเป้าหมายออมเงิน</li>
+    </ul>
+    <textarea placeholder="พิมพ์คำถามเพิ่มเติม..."></textarea>
+    <br><br>
+    <button class="cartoon-btn">ส่งคำถาม</button>
+  </div>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+  <script>
+    window.onload = () => {
+      document.querySelector(".page").classList.add("show");
+    };
+
+    function go(url) {
+      const page = document.querySelector(".page");
+      page.classList.remove("show");
+      setTimeout(() => location.href = url, 400);
+    }
+  </script>
+  </div>
+</body>
+
+</html>

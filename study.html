@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หมวดการเรียน</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-cartoon">
+
+    <div class="page" style="margin: 0 auto;">
+        <div class="cartoon-card">
+            <div style="font-size: 3rem;">📘</div>
+            <h2>หมวดการเรียน</h2>
+            <p>อยากให้ช่วยเรื่องไหนเลือกเลย</p>
+
+            <button class="cartoon-btn" onclick="goStudyProblem()">😣 มีปัญหาเรื่องเรียน</button>
+            <button class="cartoon-btn secondary" onclick="location.href='study_mode_select.html'">📚
+                อยากหาความรู้</button>
+            <button class="cartoon-btn"
+                style="background-color: #AB47BC; border-color: #8E24AA; color: white; margin-top: 10px;"
+                onclick="location.href='exams.html'">📝 รวมข้อสอบ A-Level / TGAT / สอวน.</button>
+            <button class="cartoon-btn"
+                style="background-color: #29B6F6; border-color: #0288D1; color: white; margin-top: 10px;"
+                onclick="location.href='guidance_select.html'">🎓 แนะนำสายการเรียนและมหาวิทยาลัย</button>
+
+            <div style="margin-top: 20px;">
+                <a href="category.html">⬅ ย้อนกลับ</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goStudyProblem() {
+            localStorage.setItem("cat", "การเรียน");
+            location.href = "problems.html";
+        }
+
+        function goSubject() {
+            location.href = "subject.html";
+        }
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

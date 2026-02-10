@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FFB7B2">
+    <title>เลือกภาษาต่างประเทศ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="page" style="max-width: 600px;">
+
+        <div class="top-bar">
+            <button class="icon-btn" onclick="location.href='languages.html'">🔙 กลับ</button>
+            <div class="app-title" style="font-size: 1.2rem;">ภาษาต่างประเทศ</div>
+            <div style="width: 50px;"></div>
+        </div>
+
+        <h2 style="text-align: center; margin-top: 20px; color: #555;">เลือกภาษาที่ต้องการเรียน</h2>
+
+        <div style="display: grid; gap: 20px; margin-top: 30px;">
+
+            <div class="modern-card bg-gradient-orange" onclick="goStudy('english')" style="cursor: pointer;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.5rem; color: #fff;">English (อังกฤษ)</h3>
+                        <p style="margin: 5px 0 0 0; color: #fff; opacity: 0.9;">ABC & Phonics</p>
+                    </div>
+                    <div style="font-size: 3rem;">🇬🇧</div>
+                </div>
+            </div>
+
+            <div class="modern-card bg-gradient-purple" onclick="goStudy('japanese')" style="cursor: pointer;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.5rem; color: #fff;">Japanese (ญี่ปุ่น)</h3>
+                        <p style="margin: 5px 0 0 0; color: #fff; opacity: 0.9;">ฮิรางานะ & คำศัทพ์</p>
+                    </div>
+                    <div style="font-size: 3rem;">🇯🇵</div>
+                </div>
+            </div>
+
+            <div class="modern-card bg-gradient-green" onclick="goStudy('chinese')" style="cursor: pointer;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.5rem; color: #fff;">Chinese (จีน)</h3>
+                        <p style="margin: 5px 0 0 0; color: #fff; opacity: 0.9;">พินอิน (Pinyin)</p>
+                    </div>
+                    <div style="font-size: 3rem;">🇨🇳</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function goStudy(lang) {
+            localStorage.setItem("selectedForeignLang", lang);
+            location.href = "study_language.html";
+        }
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมัครสมาชิก LifeFix</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-cartoon">
+
+    <div class="page">
+        <div class="cartoon-card">
+            <h2>สมัครสมาชิก 📝</h2>
+            <p>มาเป็นครอบครัวเดียวกันเถอะ</p>
+
+            <input id="u" class="cartoon-input" placeholder="ตั้งชื่อผู้ใช้ (10+ ตัวอักษร)">
+            <input id="email" class="cartoon-input" type="email" placeholder="อีเมล">
+            <input id="p1" class="cartoon-input" type="password" placeholder="ตั้งรหัสผ่าน (8+ ตัว, มีตัวเลข)">
+            <input id="p2" class="cartoon-input" type="password" placeholder="ยืนยันรหัสผ่าน">
+
+            <div style="text-align: left; margin: 10px 0;">
+                <label style="font-family: 'Nunito', sans-serif;">วันเดือนปีเกิด 🎂</label>
+                <input id="dob" class="cartoon-input" type="date">
+            </div>
+
+            <button class="cartoon-btn" onclick="reg()">สมัครบัญชี</button>
+            <button class="cartoon-btn secondary" onclick="location.href='login.html'">กลับไปหน้าเข้าสู่ระบบ</button>
+        </div>
+    </div>
+
+    <script>
+        function reg() {
+            let u = document.getElementById("u").value;
+            let e = document.getElementById("email").value;
+            let p1 = document.getElementById("p1").value;
+            let p2 = document.getElementById("p2").value;
+            let d = document.getElementById("dob").value;
+            let msg = "";
+
+            if (u.length < 10) msg += "• ชื่อผู้ใช้ต้องยาวกว่า 10 ตัวนะ\n";
+            if (!e.includes("@")) msg += "• ใส่อีเมลให้ถูกต้องด้วยนะ\n";
+            if (p1.length < 8) msg += "• รหัสผ่านต้องยาวกว่า 8 ตัวนะ\n";
+            if (!/\d/.test(p1)) msg += "• รหัสผ่านต้องมีตัวเลขด้วยนะ\n";
+            if (p1 != p2) msg += "• รหัสผ่านไม่ตรงกันลองเช็คดูใหม่นะ\n";
+            if (d == "") msg += "• อย่าลืมใส่วันเกิดด้วยนะ\n";
+
+            if (msg != "") { alert(msg); return; }
+
+            let users = JSON.parse(localStorage.getItem("users") || "{}");
+            users[u] = { pass: p1, email: e, dob: d };
+            localStorage.setItem("users", JSON.stringify(users));
+
+            alert("เย้! สมัครสมาชิกสำเร็จแล้ว!");
+            location.href = "login.html";
+        }
+    </script>
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เลือกโหมดการเรียนรู้</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .mode-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+            border: 3px solid #eee;
+        }
+
+        .mode-card:hover {
+            transform: scale(1.05);
+            border-color: #4CAF50;
+        }
+
+        .mode-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body class="bg-cartoon">
+
+    <div class="page" style="text-align: center;">
+        <h1>เลือกโหมดการเรียนรู้</h1>
+        <p style="font-size: 1.2rem;">น้องๆ ต้องการทำอะไรดีคะ?</p>
+
+        <div class="container">
+            <div class="mode-card" onclick="selectMode('read')">
+                <div class="mode-icon">📖</div>
+                <h2>อ่านบทเรียน</h2>
+                <p>เรียนรู้เนื้อหา ทำความเข้าใจบทเรียน</p>
+            </div>
+
+            <div class="mode-card" onclick="selectMode('quiz')">
+                <div class="mode-icon">✍️</div>
+                <h2>ทำแบบฝึกหัด</h2>
+                <p>ทดสอบความรู้ ตะลุยโจทย์</p>
+            </div>
+        </div>
+
+        <button class="icon-btn" onclick="location.href='study.html'">⬅ ย้อนกลับ</button>
+    </div>
+
+    <script>
+        function selectMode(mode) {
+            // Save the selected mode to localStorage
+            localStorage.setItem('studyMode', mode);
+            // Navigate to the category selection page
+            location.href = 'subject.html';
+        }
+    </script>
+</body>
+
+</html>

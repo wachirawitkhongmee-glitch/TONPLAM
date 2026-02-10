@@ -1,0 +1,346 @@
+/* Floating Action Button */
+.fab-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+.fab-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #ff9aa2;
+    border: 4px solid white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fab-btn:hover {
+    transform: scale(1.1);
+    background: #ffb7b2;
+}
+
+.fab-btn:active {
+    transform: scale(0.95);
+}
+
+/* Modal Overlay */
+.game-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px);
+}
+
+.game-modal-overlay.active {
+    display: flex;
+}
+
+/* Game Window */
+.game-window {
+    background: #fff;
+    width: 95%;
+    max-width: 500px;
+    max-height: 90vh;
+    /* Don't overflow screen height */
+    overflow-y: auto;
+    /* Scroll if needed */
+    border-radius: 25px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    border: 4px solid #555;
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ff6f61;
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    font-family: 'Fredoka', cursive;
+}
+
+.game-title {
+    font-size: 2rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Menu Grid */
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.game-card {
+    background: #e2f0cb;
+    border: 3px solid #b5ead7;
+    border-radius: 20px;
+    padding: 20px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+}
+
+.game-card:hover {
+    transform: translateY(-3px);
+    background: #d4e8b3;
+}
+
+.game-card-icon {
+    font-size: 40px;
+    width: 60px;
+    text-align: center;
+}
+
+.game-card h3 {
+    margin: 0;
+    color: #555;
+}
+
+.game-card p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+    color: #777;
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Common Game Styles */
+.game-container {
+    display: none;
+    /* Hidden by default */
+}
+
+.game-container.active {
+    display: block;
+}
+
+.back-btn {
+    background: #FFB7B2;
+    border: 3px solid white;
+    padding: 8px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-family: 'Fredoka', cursive;
+    color: white;
+    float: left;
+    box-shadow: 0 4px 0 #E57373;
+    transition: all 0.1s;
+    position: relative;
+    top: 0;
+}
+
+.back-btn:hover {
+    filter: brightness(1.05);
+}
+
+.back-btn:active {
+    top: 3px;
+    box-shadow: 0 1px 0 #E57373;
+}
+
+/* Game 1: Card Match */
+.difficulty-selector {
+    margin-bottom: 20px;
+}
+
+.grid-board {
+    display: grid;
+    gap: 10px;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.card {
+    width: 70px;
+    height: 70px;
+    background: #afe9e7;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    border: 3px solid #84d8d5;
+    transition: transform 0.3s, background 0.3s;
+    user-select: none;
+}
+
+.card.flipped {
+    background: #fff;
+    transform: scale(1.05);
+}
+
+.card.matched {
+    background: #b9fbc0;
+    border-color: #7ceb8b;
+    visibility: visible;
+    cursor: default;
+}
+
+/* Game 2: Memory Sequence */
+.simon-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    max-width: 300px;
+    margin: 20px auto;
+}
+
+.simon-btn {
+    aspect-ratio: 1;
+    border-radius: 20px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: #f0f0f0;
+    transition: transform 0.1s, filter 0.1s;
+}
+
+.simon-btn.active {
+    filter: brightness(1.2);
+    transform: scale(0.95);
+    border-color: rgba(0, 0, 0, 0.3);
+}
+
+.score-display {
+    font-size: 1.5rem;
+    margin: 10px 0;
+    color: #ff6f61;
+}
+
+/* Game 3: 24 Game */
+.nums-display {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.num-card {
+    width: 60px;
+    height: 80px;
+    background: #fff0ff;
+    border: 3px solid #ffc6ff;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #555;
+    cursor: pointer;
+}
+
+.num-card.used {
+    background: #ddd;
+    border-color: #ccc;
+    color: #aaa;
+    cursor: default;
+}
+
+.operators {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.op-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #ffec99;
+    border: 3px solid #ffe066;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.expression-box {
+    background: #f8f9fa;
+    border: 2px dashed #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    min-height: 30px;
+    font-size: 1.2rem;
+    font-family: 'Nunito', monospace;
+}
+
+.status-msg {
+    min-height: 20px;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #ff6f61;
+    font-size: 1.1rem;
+    transition: opacity 0.3s;
+}
+
+.shake {
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}

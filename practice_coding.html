@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FFB7B2">
+    <title>ฝึกเขียนโค้ด</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .split-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        @media (min-width: 600px) {
+            .split-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .code-area {
+            width: 100%;
+            height: 200px;
+            background-color: #282c34;
+            color: #61dafb;
+            font-family: 'Consolas', 'Courier New', monospace;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #ddd;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            line-height: 1.5;
+            resize: vertical;
+        }
+
+        .code-area::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .output-area {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 15px;
+            min-height: 60px;
+            margin-top: 10px;
+            border: 2px solid #e9ecef;
+            font-family: monospace;
+            color: #333;
+        }
+
+        .ai-feedback {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 10px;
+            border-left: 5px solid #4CAF50;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .ai-loading {
+            color: #FF6F61;
+            font-style: italic;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border-radius: 20px 20px 0 0;
+            border: none;
+            background: #eee;
+            cursor: pointer;
+            font-family: 'Fredoka', cursive;
+            font-size: 1rem;
+            color: #888;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #FF6F61;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            background: white;
+            padding: 20px;
+            border-radius: 0 20px 20px 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page" style="max-width: 800px;">
+
+        <div class="top-bar">
+            <button class="icon-btn" onclick="location.href='computer_languages.html'">🔙 กลับ</button>
+            <div class="app-title" style="font-size: 1.2rem;">ห้องเรียน AI 🤖</div>
+            <div style="width: 50px;"></div>
+        </div>
+
+        <!-- Header Section -->
+        <div class="modern-card bg-gradient-purple" style="color: white; padding: 20px; text-align: center;">
+            <h2 id="lang-title" style="margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); color: white;"></h2>
+            <p id="lang-desc" style="margin-top: 5px; opacity: 0.9; color: white;"></p>
+        </div>
+
+        <div class="split-container">
+
+            <!-- Left Column: Tutorial -->
+            <div>
+                <div style="margin-bottom: 10px;">
+                    <button class="tab-btn active">📖 บทเรียน</button>
+                </div>
+                <div class="tab-content" style="box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                    <div id="tutorial-content"></div>
+                </div>
+            </div>
+
+            <!-- Right Column: Practice -->
+            <div>
+                <div style="margin-bottom: 10px;">
+                    <button class="tab-btn active" style="background: #282c34; color: #fff;">⌨️ ฝึกเขียนโค้ด</button>
+                </div>
+
+                <div class="modern-card" style="padding: 15px; border-radius: 0 20px 20px 20px; margin-bottom: 0;">
+                    <textarea id="code-input" class="code-area" placeholder="// พิมพ์โค้ดของคุณที่นี่..."></textarea>
+
+                    <button class="cartoon-btn" onclick="runCode()"
+                        style="margin-top: 5px; background: #61dafb; color: #282c34; box-shadow: 0 4px 0 #3b8dbd;">
+                        ▶️ รันโค้ด (Run)
+                    </button>
+
+                    <div style="margin-top: 20px;">
+                        <strong style="color: #555;">🖥️ ผลลัพธ์ (Output):</strong>
+                        <div id="output" class="output-area">waiting for code...</div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <strong style="color: #4CAF50;">🤖 AI Coach:</strong>
+                        <div id="ai-loading" class="ai-loading">กำลังวิเคราะห์โค้ดของคุณ...</div>
+                        <div id="ai-feedback" class="ai-feedback"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const selectedLang = localStorage.getItem("selectedLanguage");
+        const titleEl = document.getElementById("lang-title");
+        const descEl = document.getElementById("lang-desc");
+        const codeInput = document.getElementById("code-input");
+        const tutorialContent = document.getElementById("tutorial-content");
+
+        // Expanded Language Data
+        const langData = {
+            "python": {
+                title: "Python (ไพทอน)",
+                desc: "ภาษาที่โปรแกรมเมอร์ทั่วโลกหลงรัก เขียนง่ายเหมือนภาษาอังกฤษ!",
+                placeholder: 'print("สวัสดีชาวโลก")',
+                tutorial: `
+          <div class="tutorial-section" style="padding: 0; overflow: hidden; border: none;">
+            <h3 style="color: #FF6F61; margin: 0 0 10px 0;">🎥 เรียน Python พื้นฐาน (BorntoDev)</h3>
+            <div style="background: #f0f0f0; border-radius: 15px; padding: 30px; text-align: center; border: 2px dashed #ccc;">
+              <a href="https://www.youtube.com/watch?v=iheAKAkiAGg" target="_blank" style="text-decoration: none;">
+                <button class="cartoon-btn" style="background: #ff0000; color: white; border: none; padding: 10px 20px; font-size: 1.1rem; cursor: pointer;">
+                  ▶️ กดเพื่อดูคลิปบน YouTube
+                </button>
+              </a>
+            </div>
+          </div>
+          <p style="margin-top: 15px; color: #555;">ดูวิดีโอจบแล้ว มาลองเขียน <code>print("ข้อความ")</code> ในช่องขวามือกันเลย!</p>
+        `
+            },
+            "html": {
+                title: "HTML (เอชทีเอ็มแอล)",
+                desc: "ภาษาพื้นฐานที่ทุกเว็บไซต์ต้องมี เปรียบเสมือนกระดูกโครงสร้างของเว็บ",
+                placeholder: '<h1>หัวข้อใหญ่</h1>\n<p>ย่อหน้าข้อความ</p>',
+                tutorial: `
+           <div class="tutorial-section" style="padding: 0; overflow: hidden; border: none;">
+            <h3 style="color: #FF6F61; margin: 0 0 10px 0;">🎥 สอน HTML5 พื้นฐาน (BorntoDev)</h3>
+            <div style="background: #f0f0f0; border-radius: 15px; padding: 30px; text-align: center; border: 2px dashed #ccc;">
+              <a href="https://www.youtube.com/embed/JEqaTyGu5u4?si=D4Ai4XEQc2fuBwex" target="_blank" style="text-decoration: none;">
+                <button class="cartoon-btn" style="background: #ff0000; color: white; border: none; padding: 10px 20px; font-size: 1.1rem; cursor: pointer;">
+                  ▶️ กดเพื่อดูคลิปบน YouTube
+                </button>
+              </a>
+            </div>
+          </div>
+          <p style="margin-top: 15px; color: #555;">ลองสร้าง <code>&lt;h1&gt;</code> ของคุณเองในช่องขวามือดูสิ!</p>
+        `
+            },
+            "javascript": {
+                title: "JavaScript (จาวาสคริปต์)",
+                desc: "สมองของเว็บไซต์ ทำให้เว็บโต้ตอบกับผู้ใช้ได้ ไม่ได้นิ่งเฉยเหมือนกระดาษ",
+                placeholder: 'alert("ยินดีต้อนรับ!");',
+                tutorial: `
+           <div class="tutorial-section" style="padding: 0; overflow: hidden; border: none;">
+            <h3 style="color: #FF6F61; margin: 0 0 10px 0;">🎥 สอน JavaScript ในคลิปเดียว (BorntoDev)</h3>
+            <div style="background: #f0f0f0; border-radius: 15px; padding: 30px; text-align: center; border: 2px dashed #ccc;">
+              <a href="https://www.youtube.com/embed/x7K4pD-Q_u0" target="_blank" style="text-decoration: none;">
+                <button class="cartoon-btn" style="background: #ff0000; color: white; border: none; padding: 10px 20px; font-size: 1.1rem; cursor: pointer;">
+                  ▶️ กดเพื่อดูคลิปบน YouTube
+                </button>
+              </a>
+            </div>
+          </div>
+          <p style="margin-top: 15px; color: #555;">พร้อมแล้วลองใช้คำสั่ง <code>alert()</code> ดูหน่อยไหม?</p>
+        `
+            }
+        };
+
+        // Load Data
+        if (langData[selectedLang]) {
+            const data = langData[selectedLang];
+            titleEl.innerText = data.title;
+            descEl.innerText = data.desc;
+            codeInput.value = data.placeholder;
+            tutorialContent.innerHTML = data.tutorial;
+        } else {
+            titleEl.innerText = "ไม่พบภาษาที่เลือก";
+        }
+
+        function runCode() {
+            const code = codeInput.value;
+            const outputDiv = document.getElementById("output");
+            const aiLoading = document.getElementById("ai-loading");
+            const aiFeedback = document.getElementById("ai-feedback");
+
+            // 1. Simulate Output
+            outputDiv.innerText = "กำลังประมวลผล...";
+            outputDiv.style.opacity = "0.5";
+
+            setTimeout(() => {
+                outputDiv.style.opacity = "1";
+                let simulatedOutput = "";
+
+                // ... (Same logic as before, just kept purely for brevity in this snapshot, assume logic copied) ...
+                if (selectedLang === "python") {
+                    const match = code.match(/print\s*\(['"](.*?)['"]\)/);
+                    simulatedOutput = (code.includes("print") && match) ? match[1] : (code.includes("print") ? "Error: Syntax ผิดพลาด ลองดูวงเล็บหรือฟันหนูดีๆ นะ" : "...");
+                } else if (selectedLang === "html") {
+                    simulatedOutput = "Web View: " + code.replace(/<[^>]*>/g, ' ');
+                } else if (selectedLang === "javascript") {
+                    simulatedOutput = code.includes("alert") ? "Popup: " + (code.match(/['"](.*?)['"]/) ? code.match(/['"](.*?)['"]/)[1] : "") : "Run Complete";
+                }
+
+                outputDiv.innerText = simulatedOutput;
+
+                // 2. AI Analysis
+                aiLoading.style.display = "block";
+                aiFeedback.style.display = "none";
+
+                setTimeout(() => {
+                    aiLoading.style.display = "none";
+                    aiFeedback.style.display = "block";
+                    analyzeCode(code);
+                }, 1200);
+
+            }, 400);
+        }
+
+        function analyzeCode(code) {
+            const feedbackDiv = document.getElementById("ai-feedback");
+            let feedback = "";
+
+            // Improved AI Logic with more encouraging tone
+            if (selectedLang === "python") {
+                if (code.includes("print") && (code.includes('("') || code.includes("('"))) {
+                    feedback = `
+            <b>✅ ยอดเยี่ยมมาก!</b><br>
+            คุณเขียนคำสั่ง <code>print()</code> ได้ถูกต้องตามหลักไวยากรณ์ (Syntax) เป๊ะเลย<br>
+            <br>
+            <b>💡 ลองท้าทายตัวเอง:</b> ลองเปลี่ยนข้อความข้างในเป็นชื่อของคุณดูสิ
+          `;
+                } else {
+                    feedback = `
+            <b>🤔 เกือบถูกแล้ว!</b><br>
+            เหมือนจะมีอะไรหายไปนะ... ลองเช็คดูว่า:<br>
+            1. มีคำว่า <code>print</code> แล้วหรือยัง?<br>
+            2. มีวงเล็บเปิด-ปิด <code>()</code> ครบไหม?<br>
+            3. ข้อความมีเครื่องหมายคำพูด <code>" "</code> ครอบหรือเปล่า?
+          `;
+                }
+            } else if (selectedLang === "html") {
+                if (code.includes("<") && code.includes(">") && code.includes("/")) {
+                    feedback = `
+            <b>✅ สถาปนิกเว็บตัวน้อย!</b><br>
+            คุณใช้ Tag เปิดและ Tag ปิด (เช่น <code>&lt;/h1&gt;</code>) ได้ครบถ้วนสมบูรณ์<br>
+            เว็บของคุณโครงสร้างแข็งแรงมาก!
+          `;
+                } else {
+                    feedback = `
+            <b>🤔 อย่าลืมปิดประตูบ้านนะ!</b><br>
+            HTML ส่วนใหญ่ต้องมี Tag เปิด และ Tag ปิดเสมอ<br>
+            เช่นเปิดด้วย <code>&lt;h1&gt;</code> ต้องปิดด้วย <code>&lt;/h1&gt;</code> ลองเช็คดูอีกทีนะ
+          `;
+                }
+            } else if (selectedLang === "javascript") {
+                if (code.includes("alert") || code.includes("console.log")) {
+                    feedback = `
+            <b>✅ เก่งมาก!</b><br>
+            คุณสั่งงานคอมพิวเตอร์ได้สำเร็จ!<br>
+            อย่าลืมว่า JavaScript จะสนใจเรื่องตัวพิมพ์เล็ก-ใหญ่ (Case Sensitive) มากๆ นะ
+          `;
+                } else {
+                    feedback = `
+            <b>🤔 Hmm...</b><br>
+            ลองเริ่มจากคำสั่งง่ายๆ ในบทเรียนด้านซ้ายมือก่อนนะ<br>
+            เช่น <code>alert("Hello");</code>
+          `;
+                }
+            }
+
+            feedbackDiv.innerHTML = feedback;
+        }
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

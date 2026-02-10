@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ยืนยันตัวตน</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-cartoon">
+
+    <div class="page">
+        <div class="cartoon-card">
+            <h2>กรอกรหัสยืนยัน 🔐</h2>
+            <p>เช็คอีเมลแล้วนำรหัส 6 หลักมากรอกนะ</p>
+
+            <input id="otp" class="cartoon-input" placeholder="เลข OTP 6 หลัก">
+            <input id="newpass" class="cartoon-input" type="password" placeholder="ตั้งรหัสผ่านใหม่ที่ต้องการ">
+
+            <button class="cartoon-btn" onclick="verify()">ยืนยันเปลี่ยนรหัส</button>
+            <button class="cartoon-btn secondary" onclick="location.href='login.html'">ยกเลิก</button>
+        </div>
+    </div>
+
+    <script>
+        function verify() {
+            let code = document.getElementById("otp").value;
+            let newp = document.getElementById("newpass").value;
+
+            if (code != localStorage.getItem("otp")) { alert("รหัส OTP ไม่ถูกต้อง ลองเช็คดูใหม่อีกทีนะ"); return; }
+
+            let u = localStorage.getItem("otp_user");
+            let users = JSON.parse(localStorage.getItem("users"));
+            users[u].pass = newp;
+            localStorage.setItem("users", JSON.stringify(users));
+
+            alert("เปลี่ยนรหัสผ่านสำเร็จแล้ว! เย้!");
+            location.href = "login.html";
+        }
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

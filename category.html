@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#FFB7B2">
+  <title>เลือกหมวดปัญหา</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="minigames.css">
+</head>
+
+<body>
+
+  <div class="page" style="max-width: 600px;">
+
+    <div class="top-bar">
+      <div class="app-title" style="font-size: 1.5rem; color: #FF6F61;">LifeFix Web 🎈</div>
+      <div>
+        <button class="icon-btn" onclick="openHistory()">📜 ประวัติ</button>
+        <button class="icon-btn" onclick="location.href='logout.html'">🚪 ออก</button>
+      </div>
+    </div>
+
+    <h2>อยากให้ช่วยเรื่องอะไรครับ?</h2>
+
+    <div class="grid-container">
+      <div class="category-item color-yellow" onclick="goSolve('การเดินทาง')">
+        <div style="font-size: 3rem;">🚗</div>
+        <div>การเดินทาง</div>
+      </div>
+      <div class="category-item color-blue" onclick="goSolve('การเงิน')">
+        <div style="font-size: 3rem;">💰</div>
+        <div>การเงิน</div>
+      </div>
+      <div class="category-item color-green" onclick="goSolve('การเรียน')">
+        <div style="font-size: 3rem;">📚</div>
+        <div>การเรียน</div>
+      </div>
+      <div class="category-item color-pink" onclick="goSolve('อาหาร')">
+        <div style="font-size: 3rem;">🍱</div>
+        <div>อาหาร</div>
+      </div>
+      <div class="category-item color-purple" onclick="goSolve('ภาษา')">
+        <div style="font-size: 3rem;">🗣️</div>
+        <div>ภาษา</div>
+      </div>
+      <div class="category-item color-yellow" onclick="goSolve('อื่นๆ')">
+        <div style="font-size: 3rem;">🧩</div>
+        <div>อื่นๆ</div>
+      </div>
+    </div>
+
+    <!-- Mini Game Button -->
+    <div class="fab-container">
+      <button class="fab-btn" onclick="location.href='minigames.html'">🎮</button>
+    </div>
+
+    <!-- About Us / Creators Link -->
+    <div style="position: fixed; bottom: 20px; left: 20px; z-index: 100;">
+      <button class="icon-btn" onclick="location.href='about_us.html'"
+        style="background: white; padding: 8px 15px; border-radius: 20px; font-size: 0.8rem; box-shadow: 0 4px 0 #ddd;">
+        👤 ผู้จัดทำ
+      </button>
+    </div>
+
+
+
+    <script>
+      function openHistory() {
+        let u = localStorage.getItem("currentUser");
+        // If user wants to go to history.html explicitly:
+        location.href = 'history.html';
+
+
+      }
+
+
+      function goSolve(type) {
+        localStorage.setItem("cat", type);
+
+        if (type === "อาหาร") {
+          location.href = "food.html";
+        }
+        else if (type === "การเรียน") {
+          location.href = "study.html";
+        }
+        else if (type === "การเงิน") {
+          location.href = "finance.html";
+        }
+        else if (type === "ภาษา") {
+          location.href = "languages.html";
+        }
+        else if (type === "การเดินทาง") {
+          location.href = "travel.html";
+        }
+        else {
+          location.href = "problems.html";
+        }
+      }
+
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("service-worker.js");
+      }
+    </script>
+
+</body>
+
+</html>

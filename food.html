@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หมวดอาหาร</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-cartoon">
+
+    <div class="page">
+        <div class="cartoon-card">
+            <div style="font-size: 3rem;">🍱</div>
+            <h2>หมวดอาหาร</h2>
+
+            <p>เลือกหัวข้อที่สนใจได้เลย</p>
+
+            <button class="cartoon-btn" onclick="goEat()">🍽 ปัญหาการกิน</button>
+            <button class="cartoon-btn secondary" onclick="goCook()">👩‍🍳 ทำอาหารกินเอง</button>
+
+            <div style="margin-top: 20px;">
+                <a href="category.html">⬅ ย้อนกลับ</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goEat() {
+            // Ensuring cat is set just in case
+            localStorage.setItem("cat", "อาหาร");
+            location.href = "problems.html";
+        }
+
+        function goCook() {
+            location.href = "cook.html";
+        }
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

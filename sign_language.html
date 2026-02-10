@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FFB7B2">
+    <title>ห้องเรียนภาษามือ</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .split-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        @media (min-width: 800px) {
+            .split-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .reference-sheet {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border: 3px solid #eee;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .sign-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            transition: transform 0.2s;
+        }
+
+        .sign-item:hover {
+            transform: translateY(-2px);
+            border-color: #a1c4fd;
+        }
+
+        .sign-img-container {
+            margin-right: 15px;
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #eee;
+            background: white;
+        }
+
+        .sign-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sign-desc {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .sign-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page" style="max-width: 1000px;">
+
+        <div class="top-bar">
+            <button class="icon-btn" onclick="location.href='languages.html'">🔙 กลับ</button>
+            <div class="app-title" style="font-size: 1.2rem;">ห้องเรียนภาษามือ 🤟</div>
+            <div style="width: 50px;"></div>
+        </div>
+
+        <!-- Header Section -->
+        <div class="modern-card"
+            style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); color: white; padding: 20px; text-align: center;">
+            <h2 style="margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); color: white;">ภาษามือไทย (Thai Sign
+                Language)</h2>
+            <p style="margin-top: 5px; opacity: 0.9; color: white;">เรียนรู้การสื่อสารไร้เสียงด้วยใจและมือ</p>
+        </div>
+
+        <div class="split-container">
+
+            <!-- Left Column: Video Lesson -->
+            <div>
+                <div class="modern-card" style="padding: 0; overflow: hidden; border: none; margin-bottom: 20px;">
+                    <div style="padding: 15px; border-bottom: 2px solid #eee;">
+                        <h3 style="margin: 0; color: #555;">📺 วิดีโอสอน: คำศัพท์พื้นฐานในชีวิตประจำวัน</h3>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 40px; text-align: center; border-radius: 0 0 15px 15px;">
+                        <a href="https://www.youtube.com/watch?v=gW3pZ18A-w8" target="_blank"
+                            style="text-decoration: none;">
+                            <button class="cartoon-btn"
+                                style="background: #ff0000; color: white; border: none; padding: 15px 30px; font-size: 1.2rem; cursor: pointer;">
+                                ▶️ กดเพื่อดูวิดีโอบน YouTube
+                            </button>
+                        </a>
+                    </div>
+                    <p style="padding: 15px; margin: 0; color: #777; font-size: 0.9rem;">
+                        *วิดีโอประกอบการเรียนรู้จาก Geng's Diary
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Column: Illustrated Guide -->
+            <div>
+                <div class="reference-sheet">
+                    <h3 style="margin-top: 0; color: #555; border-bottom: 2px solid #eee; padding-bottom: 10px;">📖
+                        คำศัพท์น่ารู้ (Vocabulary)</h3>
+
+                    <!-- Hello -->
+                    <div class="sign-item">
+                        <div class="sign-img-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Thai_greeting_Wai.jpg/640px-Thai_greeting_Wai.jpg"
+                                class="sign-img" alt="Wai">
+                        </div>
+                        <div>
+                            <div class="sign-title">สวัสดี (Hello)</div>
+                            <div class="sign-desc">
+                                ใช้ท่า "ไหว้" ปกติ (พนมมือระดับอก) เป็นการทักทายสากลในภาษามือไทย
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thank you -->
+                    <div class="sign-item">
+                        <div class="sign-img-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Thai_Wai_2.jpg/480px-Thai_Wai_2.jpg"
+                                class="sign-img" alt="Thank you">
+                        </div>
+                        <div>
+                            <div class="sign-title">ขอบคุณ (Thank you)</div>
+                            <div class="sign-desc">
+                                ใช้หลังมือข้างขวา แตะที่คาง แล้วยื่นมือออกไปข้างหน้าเบาๆ หรือ
+                                ใช้ท่าไหว้พร้อมก้มศีรษะเล็กน้อย
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- I Love You -->
+                    <div class="sign-item">
+                        <div class="sign-img-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/I_Love_You_Hand_Symbol.svg/1200px-I_Love_You_Hand_Symbol.svg.png"
+                                class="sign-img" alt="I Love You" style="object-fit: contain; padding: 5px;">
+                        </div>
+                        <div>
+                            <div class="sign-title">ฉันรักเธอ (I love you)</div>
+                            <div class="sign-desc">
+                                ชูนิ้วโป้ง นิ้วชี้ และนิ้วก้อย (ท่า I-L-Y สากล)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Father -->
+                    <div class="sign-item">
+                        <div class="sign-img-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/ASL_Dad.jpg/320px-ASL_Dad.jpg"
+                                class="sign-img" alt="Father">
+                        </div>
+                        <div>
+                            <div class="sign-title">พ่อ (Father)</div>
+                            <div class="sign-desc">
+                                ใช้นิ้วโป้งแตะที่หน้าผาก (ส่วนบนของใบหน้าสื่อถึงผู้ชาย/พ่อ)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mother -->
+                    <div class="sign-item">
+                        <div class="sign-img-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/ASL_Mom.jpg/320px-ASL_Mom.jpg"
+                                class="sign-img" alt="Mother">
+                        </div>
+                        <div>
+                            <div class="sign-title">แม่ (Mother)</div>
+                            <div class="sign-desc">
+                                ใช้นิ้วโป้งแตะที่คาง (ส่วนล่างของใบหน้าสื่อถึงผู้หญิง/แม่)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Eat -->
+                    <div class="sign-item">
+                        <div class="sign-img-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Eating_icon_noun_project_1523.svg/1200px-Eating_icon_noun_project_1523.svg.png"
+                                class="sign-img" alt="Eat" style="object-fit: contain; padding: 10px;">
+                        </div>
+                        <div>
+                            <div class="sign-title">กิน (Eat)</div>
+                            <div class="sign-desc">
+                                จีบนิ้วมือเข้าหาปาก (เหมือนถือของกินเข้าปาก)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Water -->
+                    <div class="sign-item">
+                        <div class="sign-img-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Drink_water.svg/1200px-Drink_water.svg.png"
+                                class="sign-img" alt="Water" style="object-fit: contain; padding: 5px;">
+                        </div>
+                        <div>
+                            <div class="sign-title">น้ำดื่ม (Water)</div>
+                            <div class="sign-desc">
+                                ทำมือเป็นตัว W (ชู 3 นิ้ว) แตะที่คาง หรือทำท่าถือแก้วดื่มน้ำ
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toilet -->
+                    <div class="sign-item">
+                        <div class="sign-img-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Toilet_sign.svg/1200px-Toilet_sign.svg.png"
+                                class="sign-img" alt="Toilet" style="object-fit: contain; padding: 5px;">
+                        </div>
+                        <div>
+                            <div class="sign-title">ห้องน้ำ (Toilet)</div>
+                            <div class="sign-desc">
+                                กำมือแล้วชูนิ้วโป้งสอดระหว่างนิ้วชี้และกลาง (ตัว T) แล้วเขย่าข้อมือเบาๆ
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

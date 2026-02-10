@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FFB7B2">
+    <title>เลือกภาษาคอมพิวเตอร์</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="page" style="max-width: 600px;">
+
+        <div class="top-bar">
+            <button class="icon-btn" onclick="location.href='languages.html'">🔙 กลับ</button>
+            <div class="app-title" style="font-size: 1.2rem;">ภาษาคอมพิวเตอร์</div>
+            <div style="width: 50px;"></div>
+        </div>
+
+        <h2 style="text-align: center; margin-top: 20px; color: #555;">เลือกภาษาที่ต้องการฝึก</h2>
+
+        <div style="display: grid; gap: 20px; margin-top: 30px;">
+
+            <div class="modern-card bg-gradient-green" onclick="goPractice('python')" style="cursor: pointer;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.5rem; color: #fff;">Python</h3>
+                        <p style="margin: 5px 0 0 0; color: #fff; opacity: 0.9;">ง่ายสำหรับผู้เริ่มต้น</p>
+                    </div>
+                    <div style="font-size: 3rem;">🐍</div>
+                </div>
+            </div>
+
+            <div class="modern-card bg-gradient-orange" onclick="goPractice('html')" style="cursor: pointer;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.5rem; color: #fff;">HTML</h3>
+                        <p style="margin: 5px 0 0 0; color: #fff; opacity: 0.9;">สร้างหน้าเว็บพื้นฐาน</p>
+                    </div>
+                    <div style="font-size: 3rem;">🌐</div>
+                </div>
+            </div>
+
+            <div class="modern-card bg-gradient-purple" onclick="goPractice('javascript')" style="cursor: pointer;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.5rem; color: #fff;">JavaScript</h3>
+                        <p style="margin: 5px 0 0 0; color: #fff; opacity: 0.9;">ทำให้เว็บมีลูกเล่น</p>
+                    </div>
+                    <div style="font-size: 3rem;">⚡</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function goPractice(lang) {
+            localStorage.setItem("selectedLanguage", lang);
+            location.href = "practice_coding.html";
+        }
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

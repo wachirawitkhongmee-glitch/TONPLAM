@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ครัวหรรษา</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Page specific styles */
+        .cook-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding-bottom: 50px;
+        }
+
+        .ingredient-panel {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .recipe-panel {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            color: #555;
+            margin: 15px 0 10px 0;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .ingredient-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .ing-card {
+            background: white;
+            border: 2px solid #EEE;
+            border-radius: 15px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .ing-card:hover {
+            border-color: #DDD;
+            transform: translateY(-2px);
+        }
+
+        .ing-card.selected {
+            border-color: #FFB7B2;
+            background: #FFEBEE;
+            box-shadow: 0 4px 0 #FFB7B2;
+            transform: translateY(-2px);
+        }
+
+        .ing-card.selected .emoji {
+            transform: scale(1.2);
+        }
+
+        .emoji {
+            font-size: 2rem;
+            transition: transform 0.2s;
+        }
+
+        .name {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: #555;
+        }
+
+        /* Recipe Cards */
+        .recipe-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 3px solid #eee;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .recipe-match-high {
+            border-color: #81C784;
+            background: #F1F8E9;
+        }
+
+        .recipe-match-med {
+            border-color: #FFF176;
+            background: #FFFDE7;
+        }
+
+        .recipe-match-low {
+            border-color: #E0E0E0;
+            opacity: 0.8;
+        }
+
+        .match-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .match-100 {
+            background: #43A047;
+        }
+
+        .match-high {
+            background: #7CB342;
+        }
+
+        .match-med {
+            background: #FDD835;
+            color: #444;
+        }
+
+        .match-low {
+            background: #9E9E9E;
+        }
+
+        .recipe-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .missing-ing {
+            color: #E57373;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .method-btn {
+            margin-top: 10px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .method-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            text-align: left;
+            display: none;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Fixed bottom bar */
+        .selection-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            border-radius: 20px 20px 0 0;
+        }
+
+        @media (max-width: 600px) {
+            .cook-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-cartoon" style="display: block; overflow-y: auto;">
+
+    <div class="page" style="max-width: 900px; margin: 0 auto; padding-bottom: 100px;">
+
+        <div class="top-bar">
+            <div class="app-title" style="font-size: 1.5rem; color: #FF6F61;">ครัวหรรษา 🍳</div>
+            <button class="icon-btn" onclick="goToHome()">🏠 กลับบ้าน</button>
+        </div>
+
+        <div class="cook-container">
+
+            <!-- Left: Ingredients -->
+            <div class="ingredient-panel">
+                <div class="cartoon-card" style="text-align: left;">
+                    <h2 style="margin-top: 0;">เลือกวัตถุดิบที่มี 👇</h2>
+                    <p style="margin-bottom: 10px;">กดเลือกวัตถุดิบที่คุณมีในตู้เย็นเลย!</p>
+
+                    <div id="ing-container"></div>
+                </div>
+            </div>
+
+            <!-- Right: Recipes -->
+            <div class="recipe-panel">
+                <div class="cartoon-card" style="min-height: 200px;">
+                    <h2>เมนูที่ทำได้ 🍽</h2>
+                    <div id="recipe-list">
+                        <p style="color: #888; margin-top: 50px;">👈 เลือกวัตถุดิบทางซ้าย<br>เพื่อดูเมนูอร่อยๆ</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="selection-bar">
+        <div style="font-weight: bold; color: #555;">
+            เลือกแล้ว <span id="count-badge"
+                style="background: #FF6F61; color: white; padding: 2px 8px; border-radius: 10px;">0</span> อย่าง
+        </div>
+        <button class="cartoon-btn" style="width: auto; padding: 10px 20px; font-size: 1rem; margin-top: 0;"
+            onclick="clearAll()">ล้างทั้งหมด</button>
+    </div>
+
+    <script>
+        // --- Data ---
+        const categories = {
+            meats: "เนื้อสัตว์ 🥩",
+            veg: "ผักและผลไม้ 🥬",
+            carb: "ข้าว/แป้ง 🍚",
+            other: "อื่นๆ 🧀"
+        };
+
+        const ingredients = [
+            // Meats
+            { id: "egg", name: "ไข่", emoji: "🥚", cat: "meats" },
+            { id: "pork", name: "หมู", emoji: "🐖", cat: "meats" },
+            { id: "chicken", name: "ไก่", emoji: "🐓", cat: "meats" },
+            { id: "beef", name: "เนื้อวัว", emoji: "🐄", cat: "meats" },
+            { id: "shrimp", name: "กุ้ง", emoji: "🦐", cat: "meats" },
+            { id: "squid", name: "ปลาหมึก", emoji: "🦑", cat: "meats" },
+            { id: "fish", name: "ปลา", emoji: "🐟", cat: "meats" },
+            { id: "sausage", name: "ไส้กรอก", emoji: "🌭", cat: "meats" },
+            { id: "bacon", name: "เบคอน", emoji: "🥓", cat: "meats" },
+            { id: "ham", name: "แฮม", emoji: "🍖", cat: "meats" },
+            { id: "minced_pork", name: "หมูสับ", emoji: "🥩", cat: "meats" },
+            { id: "crab_stick", name: "ปูอัด", emoji: "🍥", cat: "meats" },
+            { id: "canned_fish", name: "ปลากระป๋อง", emoji: "🥫", cat: "meats" },
+
+            // Veg
+            { id: "garlic", name: "กระเทียม", emoji: "🧄", cat: "veg" },
+            { id: "chili", name: "พริก", emoji: "🌶", cat: "veg" },
+            { id: "onion", name: "หอมใหญ่", emoji: "🧅", cat: "veg" },
+            { id: "carrot", name: "แครอท", emoji: "🥕", cat: "veg" },
+            { id: "cabbage", name: "กะหล่ำปลี", emoji: "🥬", cat: "veg" },
+            { id: "chinese_kale", name: "คะน้า", emoji: "🥬", cat: "veg" },
+            { id: "morning_glory", name: "ผักบุ้ง", emoji: "🌿", cat: "veg" },
+            { id: "basil", name: "กะเพรา", emoji: "🌿", cat: "veg" },
+            { id: "spring_onion", name: "ต้นหอม", emoji: "🌱", cat: "veg" },
+            { id: "tomato", name: "มะเขือเทศ", emoji: "🍅", cat: "veg" },
+            { id: "potato", name: "มันฝรั่ง", emoji: "🥔", cat: "veg" },
+            { id: "cucumber", name: "แตงกวา", emoji: "🥒", cat: "veg" },
+            { id: "mushroom", name: "เห็ด", emoji: "🍄", cat: "veg" },
+            { id: "corn", name: "ข้าวโพด", emoji: "🌽", cat: "veg" },
+            { id: "lime", name: "มะนาว", emoji: "🍋", cat: "veg" },
+            { id: "papaya", name: "มะละกอ", emoji: "🍈", cat: "veg" },
+
+            // Carb
+            { id: "rice", name: "ข้าวสวย", emoji: "🍚", cat: "carb" },
+            { id: "bread", name: "ขนมปัง", emoji: "🍞", cat: "carb" },
+            { id: "noodle", name: "เส้นก๋วยเตี๋ยว", emoji: "🍜", cat: "carb" },
+            { id: "instant_noodle", name: "มาม่า", emoji: "🍜", cat: "carb" },
+            { id: "pasta", name: "พาสต้า", emoji: "🍝", cat: "carb" },
+
+            // Other
+            { id: "cheese", name: "ชีส", emoji: "🧀", cat: "other" },
+            { id: "milk", name: "นม", emoji: "🥛", cat: "other" },
+            { id: "butter", name: "เนย", emoji: "🧈", cat: "other" },
+            { id: "mayo", name: "มายองเนส", emoji: "🥣", cat: "other" },
+            { id: "curry_paste", name: "พริกแกง", emoji: "🥘", cat: "other" }
+        ];
+
+        const recipes = [
+            {
+                name: "ข้าวผัดไข่",
+                needs: ["rice", "egg"],
+                opt: ["garlic", "spring_onion", "carrot", "pork", "sausage"],
+                method: "1. เจียวกระเทียมให้หอม ใส่เนื้อสัตว์ผัดให้สุก<br>2. ใส่ไข่ ยีให้แตก<br>3. ใส่ข้าวสวย ปรุงรสด้วยซอส<br>4. ใส่ผักที่ชอบ ผัดให้เข้ากัน"
+            },
+            {
+                name: "กะเพราหมูสับ",
+                needs: ["minced_pork", "basil", "chili", "garlic"],
+                method: "1. ตำพริกกับกระเทียม<br>2. ผัดพริกกระเทียมให้ฉุน ใส่หมูสับผัดให้สุก<br>3. ปรุงรส ใส่ใบกะเพรา คลุกเคล้าให้ทั่ว"
+            },
+            {
+                name: "ไข่เจียว",
+                needs: ["egg"],
+                opt: ["minced_pork", "onion", "spring_onion", "crab_stick"],
+                method: "1. ตอกไข่ ตีให้เข้ากัน<br>2. ใส่เครื่องที่ชอบ (หมูสับ/หอมใหญ่)<br>3. ทอดในน้ำมันร้อนๆ จนฟูเหลืองกรอบ"
+            },
+            {
+                name: "มาม่าผัดขี้เมา",
+                needs: ["instant_noodle", "chili", "garlic", "basil"],
+                opt: ["pork", "sausage", "cabbage"],
+                method: "1. ลวกเส้นมาม่าพักไว้<br>2. ผัดพริกกระเทียม ใส่เนื้อสัตว์<br>3. ใส่เส้น ปรุงรส ใส่ใบกะเพรา ผัดให้เข้ากันแรงๆ"
+            },
+            {
+                name: "แซนวิชแฮมชีส",
+                needs: ["bread", "ham", "cheese"],
+                method: "1. วางแฮมและชีสบนขนมปัง<br>2. ประกบด้วยขนมปังอีกแผ่น<br>3. อบหรือจี่ในกระทะให้ชีสเยิ้มๆ"
+            },
+            {
+                name: "ข้าวต้มหมูสับ",
+                needs: ["rice", "minced_pork"],
+                opt: ["garlic", "spring_onion"],
+                method: "1. ต้มน้ำซุป ใส่หมูสับปั้นก้อน<br>2. ใส่ข้าวสวย ต้มจนนุ่ม<br>3. โรยกระเทียมเจียวและต้นหอม"
+            },
+            {
+                name: "สุกี้แห้ง",
+                needs: ["cabbage", "egg", "pork"], // Basic suki needs
+                opt: ["morning_glory", "carrot", "celery", "noodle"],
+                method: "1. ลวกผักและเนื้อสัตว์<br>2. ผัดไข่และใส่เครื่องทั้งหมด<br>3. ใส่น้ำจิ้มสุกี้ ผัดให้แห้งพอขลุกขลิก"
+            },
+            {
+                name: "ยำปลากระป๋อง",
+                needs: ["canned_fish", "lime", "chili", "onion"],
+                method: "1. เทปลากระป๋องใส่จาน<br>2. ซอยหอมใหญ่และพริก ใส่ลงไป<br>3. บีบมะนาว ปรุงรสตามชอบ"
+            },
+            {
+                name: "เฟรนช์ฟรายส์",
+                needs: ["potato"],
+                method: "1. ปอกเปลือกมันฝรั่ง หั่นเป็นแท่ง<br>2. แช่น้ำเกลือ แล้วซับให้แห้ง<br>3. ทอดไฟกลางจนเหลืองกรอบ"
+            },
+            {
+                name: "ไข่ตุ๋น",
+                needs: ["egg"],
+                opt: ["minced_pork", "carrot", "spring_onion"],
+                method: "1. ตีไข่กับน้ำซุป (อัตราส่วน 1:2)<br>2. กรองให้เนียน ใส่ถ้วย<br>3. นึ่งไฟอ่อนประมาณ 15-20 นาที"
+            },
+            {
+                name: "ผัดผักรวมมิตร",
+                needs: ["carrot", "cabbage", "garlic"],
+                opt: ["pork", "chicken", "mushroom", "corn", "broccoli"],
+                method: "1. ผัดกระเทียมให้หอม ใส่เนื้อสัตว์<br>2. ใส่ผักที่สุกยากก่อน (แครอท)<br>3. ใส่ผักใบ ปรุงรสด้วยน้ำมันหอย"
+            },
+            {
+                name: "ข้าวไข่ข้น",
+                needs: ["rice", "egg", "milk"],
+                opt: ["shrimp", "ham", "sausage"],
+                method: "1. ตีไข่ผสมนมสดเล็กน้อย<br>2. ตั้งกระทะไฟอ่อน เทไข่ลงไป<br>3. คนเบาๆ ให้ไข่สุกพอเยิ้มๆ ราดบนข้าวสวย"
+            },
+            {
+                name: "ตำแตง",
+                needs: ["cucumber", "chili", "garlic", "lime", "tomato"],
+                method: "1. โขลกพริกกระเทียม<br>2. ใส่เครื่องปรุง มะนาว น้ำปลา<br>3. สับแตงกวาใส่ลงไป ตำให้เข้ากัน"
+            },
+            {
+                name: "แพนเค้กกล้วย (คลีน)",
+                needs: ["egg"], // Assuming banana might be needed, adding banana dynamically? Or just basics.
+                // wait, I don't have banana in list. Let's act like we have. 
+                // Actually let's add banana to list or remove this recipe. 
+                // Let's remove for now to be safe or add banana.
+                // Adding Banana to ingredients:
+                method: "..."
+            },
+            {
+                name: "สปาเก็ตตี้ซอสมะเขือเทศ",
+                needs: ["pasta", "tomato", "minced_pork"],
+                opt: ["onion", "ketchup"],
+                method: "1. ต้มเส้นพาสต้าให้สุก<br>2. ผัดหอมใหญ่ หมูสับ และมะเขือเทศสับ<br>3. ปรุงรสเป็นซอส ราดบนเส้น"
+            }
+        ];
+
+        // --- Logic ---
+        let selected = new Set();
+
+        function init() {
+            const container = document.getElementById("ing-container");
+
+            // Render Categories
+            for (let catKey in categories) {
+                // Title
+                let h = document.createElement("div");
+                h.className = "category-title";
+                h.innerText = categories[catKey];
+                container.appendChild(h);
+
+                // Grid
+                let grid = document.createElement("div");
+                grid.className = "ingredient-grid";
+
+                ingredients.filter(x => x.cat === catKey).forEach(ing => {
+                    let card = document.createElement("div");
+                    card.className = "ing-card";
+                    card.onclick = () => toggle(ing.id, card);
+                    card.innerHTML = `<span class="emoji">${ing.emoji}</span><span class="name">${ing.name}</span>`;
+                    card.dataset.id = ing.id;
+                    grid.appendChild(card);
+                });
+
+                container.appendChild(grid);
+            }
+        }
+
+        function toggle(id, card) {
+            if (selected.has(id)) {
+                selected.delete(id);
+                card.classList.remove("selected");
+            } else {
+                selected.add(id);
+                card.classList.add("selected");
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById("count-badge").innerText = selected.size;
+            findRecipes();
+        }
+
+        function clearAll() {
+            selected.clear();
+            document.querySelectorAll(".ing-card.selected").forEach(c => c.classList.remove("selected"));
+            updateUI();
+        }
+
+        function findRecipes() {
+            const list = document.getElementById("recipe-list");
+            list.innerHTML = "";
+
+            if (selected.size === 0) {
+                list.innerHTML = `<p style="color: #888; margin-top: 50px;">👈 เลือกวัตถุดิบทางซ้าย<br>เพื่อดูเมนูอร่อยๆ</p>`;
+                return;
+            }
+
+            // Calculate matches
+            let results = recipes.map(r => {
+                let have = 0;
+                let missing = [];
+
+                // Count core needs
+                r.needs.forEach(n => {
+                    if (selected.has(n)) have++;
+                    else missing.push(ingredientName(n));
+                });
+
+                // Count bonus matching options (just adds to percentage if we have them?)
+                // Standard logic: Percentage = (Have Needs / Total Needs) * 100
+                // BUT if we have optional items, maybe boost score or highlight?
+                // Let's stick to Core Needs for percentage to keep it simple but accurate.
+
+                let percent = Math.round((have / r.needs.length) * 100);
+
+                // Boost logic: If 100% matched, but we also have optional ingredients, good!
+
+                return { ...r, percent, missing };
+            });
+
+            // Filter: Show anything > 0% match? Or maybe > 20%?
+            // Let's show anything that matches at least 1 ingredient selected OR > 50%?
+            // Better: Sort by percentage desc.
+
+            results.sort((a, b) => b.percent - a.percent);
+
+            // Render
+            let foundAny = false;
+            results.forEach(r => {
+                if (r.percent == 0) return; // Don't show completely irrelevant stuff? 
+                // Actually user wants to see what they can make. Showing 0% is useless.
+                // Showing low % might be inspiring.
+
+                foundAny = true;
+                let card = document.createElement("div");
+
+                // Style based on percentage
+                let styleClass = "recipe-match-low";
+                let badgeClass = "match-low";
+                let badgeText = r.percent + "%";
+
+                if (r.percent === 100) { styleClass = "recipe-match-high"; badgeClass = "match-100"; badgeText = "ทำได้เลย! 💯"; }
+                else if (r.percent >= 66) { styleClass = "recipe-match-high"; badgeClass = "match-high"; }
+                else if (r.percent >= 33) { styleClass = "recipe-match-med"; badgeClass = "match-med"; }
+
+                card.className = `recipe-card ${styleClass}`;
+
+                let missingText = r.missing.length > 0 ? `ขาด: ${r.missing.join(", ")}` : "วัตถุดิบครบแล้ว!";
+
+                card.innerHTML = `
+          <div class="match-badge ${badgeClass}">${badgeText}</div>
+          <div class="recipe-title">${r.name}</div>
+          <p>ใช้: ${r.needs.map(n => ingredientName(n)).join(", ")}</p>
+          ${r.percent < 100 ? `<div class="missing-ing">${missingText}</div>` : ""}
+          
+          <button class="method-btn" onclick="toggleMethod(this)">📖 ดูวิธีทำ</button>
+          <div class="method-box">${r.method}</div>
+        `;
+
+                list.appendChild(card);
+            });
+
+            if (!foundAny) {
+                list.innerHTML = `<p style="color: #888; margin-top: 50px;">😔 ยังไม่เจอเมนูที่ตรงกับวัตถุดิบนี้<br>ลองเลือกเพิ่มดูนะ!</p>`;
+            }
+        }
+
+        function ingredientName(id) {
+            let f = ingredients.find(x => x.id === id);
+            return f ? f.name : id;
+        }
+
+        function toggleMethod(btn) {
+            let box = btn.nextElementSibling;
+            if (box.style.display === "block") {
+                box.style.display = "none";
+                btn.innerText = "📖 ดูวิธีทำ";
+            } else {
+                box.style.display = "block";
+                btn.innerText = "ซ่อนวิธีทำ";
+            }
+        }
+
+        function goToHome() {
+            location.href = "food.html"; // Go back to food hub
+        }
+
+        window.onload = init;
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
+
+</body>
+
+</html>

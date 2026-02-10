@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ผู้ช่วยแก้ปัญหาการเดินทาง</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="ai-service.js"></script>
+</head>
+
+<body class="bg-cartoon">
+
+    <div class="page" style="max-width: 600px;">
+
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="app-title" style="font-size: 1.5rem; color: #FF6F61;">Travel Helper 🚀</div>
+            <button class="icon-btn" onclick="location.href='category.html'">🔙 กลับ</button>
+        </div>
+
+        <h2 style="text-align: center; color: #555; margin-bottom: 20px;">การเดินทาง 🚗</h2>
+
+        <main>
+
+            <!-- STEP 1: Problem Selection -->
+            <section id="step-problem" class="active">
+                <h3 style="text-align: center; color: #666; margin-bottom: 20px;">วันนี้เจอปัญหาอะไรครับ? 🧐</h3>
+                <div class="grid-container">
+                    <div class="category-item color-blue" onclick="selectProblem('traffic')">
+                        <div style="font-size: 2.5rem;">🏎️</div>
+                        <div>รถติด</div>
+                    </div>
+                    <div class="category-item color-green" onclick="selectProblem('breakdown')">
+                        <div style="font-size: 2.5rem;">🔧</div>
+                        <div>รถเสีย</div>
+                    </div>
+                    <div class="category-item color-yellow" onclick="selectProblem('no_gas')">
+                        <div style="font-size: 2.5rem;">⛽</div>
+                        <div>น้ำมันไม่พอ</div>
+                    </div>
+                    <div class="category-item color-pink" onclick="selectProblem('no_public_transport')">
+                        <div style="font-size: 2.5rem;">🚌</div>
+                        <div>รถสาธารณะไม่มา</div>
+                    </div>
+                    <div class="category-item" style="border-color: #BCAAA4; background: #EFEBE9;"
+                        onclick="selectProblem('lost')">
+                        <div style="font-size: 2.5rem;">🗺️</div>
+                        <div>หลงทาง</div>
+                    </div>
+                    <div class="category-item" style="border-color: #FFCC80; background: #FFF3E0;"
+                        onclick="selectProblem('no_money')">
+                        <div style="font-size: 2.5rem;">💰</div>
+                        <div>เงินไม่พอ</div>
+                    </div>
+                    <div class="category-item color-purple" onclick="selectProblem('bad_weather')">
+                        <div style="font-size: 2.5rem;">⛈️</div>
+                        <div>ฝนตกหนัก</div>
+                    </div>
+                </div>
+
+                <!-- AI Analysis Section -->
+                <div class="cartoon-card" style="margin-top: 25px; border-top: 3px dashed #eee; padding-top: 25px;">
+                    <h3 style="color: #2196F3;">🤖 ให้ AI ช่วยเลือกว่าเกิดอะไรขึ้น</h3>
+                    <textarea id="aiTravelInput" class="cartoon-input"
+                        placeholder="เล่าปัญหาของคุณที่นี่... (เช่น 'รถจอดเสียอยู่ข้างทางด่วน')"
+                        style="height: 80px; resize: none;" onkeypress="handleEnterTravel(event)"></textarea>
+                    <button class="cartoon-btn" id="aiTravelBtn" onclick="analyzeTravelWithAI()">✨ ให้ AI
+                        วิเคราะห์ปัญหา</button>
+                    <p id="aiTravelStatus" style="font-size: 0.8rem; color: #888; margin-top: 5px; display: none;">
+                        กำลังวิเคราะห์ด้วย AI...</p>
+                </div>
+            </section>
+
+            <!-- STEP 2: Question Flow -->
+            <section id="step-questions" class="hidden">
+                <div class="cartoon-card">
+                    <h2 id="question-text" style="font-size: 1.5rem; color: #555;">คำถาม...</h2>
+                    <div id="question-options" class="grid-container" style="margin-top: 20px;">
+                        <!-- Options will be injected by JS -->
+                    </div>
+                    <div class="progress-container"
+                        style="margin: 20px 0; background: #eee; border-radius: 10px; height: 10px;">
+                        <div id="progress"
+                            style="width: 0%; background: #FF9AA2; height: 100%; border-radius: 10px; transition: width 0.3s;">
+                        </div>
+                    </div>
+                    <button class="cartoon-btn secondary" onclick="restartApp()">
+                        🔙 เริ่มใหม่
+                    </button>
+                </div>
+            </section>
+
+            <!-- STEP 3: Analysis & Results -->
+            <section id="step-result" class="hidden">
+                <div class="cartoon-card">
+                    <h2 style="font-size: 1.8rem;">💡 คำแนะนำสำหรับคุณ</h2>
+
+                    <div id="result-container" style="margin: 20px 0; text-align: left;">
+                        <!-- Recommendations will be injected here -->
+                    </div>
+
+                    <div class="tutorial-section" style="text-align: left;">
+                        <h3>📍 แผนที่แสดงตำแหน่งปัจจุบัน</h3>
+                        <div id="map-container"
+                            style="width: 100%; height: 300px; background: #f9f9f9; border-radius: 15px; border: 2px dashed #ddd; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            <p id="map-status">กำลังระบุตำแหน่งของคุณ... 🛰️</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <button class="cartoon-btn" onclick="restartApp()">🔍 ค้นหาใหม่</button>
+                        <button class="cartoon-btn" style="background: #FF6F61; box-shadow: 0 5px 0 #D32F2F;"
+                            onclick="showEmergency()">
+                            📞 ช่วยเหลือฉุกเฉิน
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 4: Emergency Info -->
+            <section id="step-emergency" class="hidden">
+                <div class="cartoon-card">
+                    <h2 style="color: #FF6F61;">🚨 เบอร์โทรฉุกเฉิน</h2>
+                    <div style="margin: 20px 0;">
+                        <div class="category-item"
+                            style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+                            <span>เหตุด่วนเหตุร้าย</span>
+                            <a href="tel:191" style="font-size: 1.5rem; color: #FF6F61;">191</a>
+                        </div>
+                        <div class="category-item"
+                            style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+                            <span>เจ็บป่วยฉุกเฉิน</span>
+                            <a href="tel:1669" style="font-size: 1.5rem; color: #FF6F61;">1669</a>
+                        </div>
+                        <div class="category-item"
+                            style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+                            <span>ตำรวจท่องเที่ยว</span>
+                            <a href="tel:1155" style="font-size: 1.5rem; color: #FF6F61;">1155</a>
+                        </div>
+                        <div class="category-item"
+                            style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+                            <span>ข้อมูลจราจร</span>
+                            <a href="tel:1197" style="font-size: 1.5rem; color: #FF6F61;">1197</a>
+                        </div>
+                    </div>
+                    <button class="cartoon-btn secondary" onclick="hideEmergency()">❌ ปิดหน้านี้</button>
+                </div>
+            </section>
+
+        </main>
+
+        <footer style="text-align: center; margin-top: 30px; opacity: 0.7;">
+            <p>© 2024 Travel Helper - LifeFix Web</p>
+        </footer>
+
+    </div>
+
+    <script src="ai-service.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function handleEnterTravel(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                analyzeTravelWithAI();
+            }
+        }
+
+        async function analyzeTravelWithAI() {
+            const input = document.getElementById('aiTravelInput').value.trim();
+            const btn = document.getElementById('aiTravelBtn');
+            const status = document.getElementById('aiTravelStatus');
+
+            if (!input) {
+                alert("ลองพิมพ์เล่าปัญหาของคุณก่อนนะ เดี๋ยวพี่ AI ช่วยวิเคราะห์ให้จ้า!");
+                return;
+            }
+
+            const apiKey = AIService.getApiKey();
+            if (!apiKey) {
+                alert("กรุณาติดตั้ง Gemini API Key ใน 'หน้าส่งปัญหา' ก่อนนะจ๊ะ หรือจะเลือกเลือกหัวข้อด้านบนเองก็ได้จ้า!");
+                return;
+            }
+
+            btn.disabled = true;
+            status.style.display = 'block';
+
+            try {
+                const category = await AIService.analyzeTravelProblem(input);
+                if (category) {
+                    selectProblem(category);
+                    alert(`AI วิเคราะห์แล้วว่าน่าจะเกี่ยวกับ: ${problems[category].title} 🤔`);
+                } else {
+                    alert("ขอโทษทีจ้า AI ยังวิเคราะห์ปัญหาไม่ค่อยกระจ่าง ลองเลือกหัวข้อด้านบนแทนนะจ๊ะ!");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("เกิดประเด็นขัดข้องในการติดต่อ AI จ้า!");
+            } finally {
+                btn.disabled = false;
+                status.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
